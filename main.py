@@ -15,11 +15,16 @@ def Fin():
 
 
 def Recoit(port: Serial):
+	ancienneDonnees: bool = False
+
 	while True:
-		ligne = None
 		ligne = port.read(128)
-		if ligne is not None:
+		if ligne != b'':
 			print(ligne)
+			ancienneDonnees = True
+		if ancienneDonnees is True:
+			print("Attente des données")
+			ancienneDonnees = False
 
 
 def Envoie(port):
@@ -28,7 +33,7 @@ def Envoie(port):
 
 
 type_programme = input("Lecture (1) ou écriture (2) ?")
-type_OS = input("Linux (1) ou Windows (2) ?")
+type_OS = input("Linux (1) ou Windows (2) ou Linux USB(3) ?")
 
 
 port_number = input("N° port COM ? ")
@@ -36,6 +41,8 @@ if type_OS == "1":
 	port_number = "/dev/tty" + port_number
 elif type_OS == "2":
 	port_number = "COM" + port_number
+elif type_OS == "3":
+	port_number = "/dev/ttyUSB" + port_number
 
 with Serial(port=port_number, baudrate=9600, timeout=1, writeTimeout=1) as port_serie:
 	if port_serie.isOpen():
