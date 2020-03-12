@@ -14,23 +14,19 @@ def Fin():
 
 
 def Recoit(port: Serial):
-	ancienneDonnees: bool = True
 	trouve: bool = False  # tant qu'aucune donnée n'est reçue
+	print("Attente des données")
 
 	while trouve is False:
 		ligne = port.read(128)
 
 		if ligne != b'':  # si aucune données reçues
 			print(ligne)
-			ancienneDonnees = True
 			trouve = True
-		if ancienneDonnees is True:
-			print("Attente des données")
-			ancienneDonnees = False
 
 
 def Envoie(port):
-	nombre = input("Entrez un nombre : ")
+	nombre = input("Entrez les données : ")
 	port.write(nombre.encode('utf-8'))
 
 
