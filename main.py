@@ -6,7 +6,6 @@
 from serial import *
 
 port_number: str
-type_programme: str
 type_OS: str
 
 
@@ -15,13 +14,16 @@ def Fin():
 
 
 def Recoit(port: Serial):
-	ancienneDonnees: bool = False
+	ancienneDonnees: bool = True
+	trouve: bool = False  # tant qu'aucune donnée n'est reçue
 
-	while True:
+	while trouve is False:
 		ligne = port.read(128)
-		if ligne != b'':
+
+		if ligne != b'':  # si aucune données reçues
 			print(ligne)
 			ancienneDonnees = True
+			trouve = True
 		if ancienneDonnees is True:
 			print("Attente des données")
 			ancienneDonnees = False
@@ -32,11 +34,10 @@ def Envoie(port):
 	port.write(nombre.encode('utf-8'))
 
 
-type_programme = input("Lecture (1) ou écriture (2) ?")
 type_OS = input("Linux (1) ou Windows (2) ou Linux USB(3) ?")
 
 
-port_number = input("N° port COM ? ")
+port_number = input("N° port série ? ")
 if type_OS == "1":
 	port_number = "/dev/tty" + port_number
 elif type_OS == "2":
@@ -48,9 +49,7 @@ with Serial(port=port_number, baudrate=9600, timeout=1, writeTimeout=1) as port_
 	if port_serie.isOpen():
 		print("Port " + port_serie.port + " ouvert")
 
-		if type_programme == "1":
-			Envoie(port_serie)
-		elif type_programme == "2":
-			Recoit(port_serie)
+		Envoie(port_serie)
+		Recoit(port_serie)
 
 	Fin()
